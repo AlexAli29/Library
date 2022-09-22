@@ -1,0 +1,72 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewData["Title"] = "Catalog";
+}
+
+<h1>@ViewData["Title"]</h1>
+  <a asp-action="AddOrEdit">Create New</a>
+
+    <section class="book-grid"> 
+    @for(int i = 0; i < Model.Rows.Count; i++){
+      <div class="book-preview"> 
+
+        <div class="thumbnail-row">
+          <a href="https://www.googleadservices.com/pagead/aclk?sa=L&ai=DChcSEwizo8Gtmpn6AhUFu9UKHep-AdMYABAAGgJ3cw&ohost=www.google.com&cid=CAESa-D2QpDts-hPtJvDG5WpKXtzyVBLkFxSsVFuxX_4lyHdQdr98OAojSAH6HacNGgJIyO25l_knKiL-8aKXnpDIQ2l_1S1yY1IznkMvyI3UfluFNN7jwZT-pW8rg6U3HJhKDJGAwJTEASKalPf&sig=AOD64_1qxCNAqx_7h0kY0v88BwfpMczFOg&q&adurl&ved=2ahUKEwjsrLitmpn6AhVhhv0HHbNtAhIQ0Qx6BAgDEAE" target="_blank" class="book-title-link"> 
+          <img class="thumbnail" src="/Images/thumbnails/thumbnail-1.jpg"> </img>
+          </a>
+          <div class="book-rating"> @Model.Rows[i]["Rating"] </div>
+        </div>
+
+        <div class="book-info-grid">
+            
+          <div class="book-info">
+            <a href="https://www.googleadservices.com/pagead/aclk?sa=L&ai=DChcSEwizo8Gtmpn6AhUFu9UKHep-AdMYABAAGgJ3cw&ohost=www.google.com&cid=CAESa-D2QpDts-hPtJvDG5WpKXtzyVBLkFxSsVFuxX_4lyHdQdr98OAojSAH6HacNGgJIyO25l_knKiL-8aKXnpDIQ2l_1S1yY1IznkMvyI3UfluFNN7jwZT-pW8rg6U3HJhKDJGAwJTEASKalPf&sig=AOD64_1qxCNAqx_7h0kY0v88BwfpMczFOg&q&adurl&ved=2ahUKEwjsrLitmpn6AhVhhv0HHbNtAhIQ0Qx6BAgDEAE" target="_blank" class="book-title-link"> 
+              
+              <p class="book-title"> 
+                @Model.Rows[i]["BookName"] 
+                </p>
+            </a>
+
+              <p class="book-author" >
+                @Model.Rows[i]["Author"] , @Model.Rows[i]["PrintYear"] 
+              </p>
+
+              <p class="book-price">
+                @Model.Rows[i]["Price"]  BYN
+                </p>
+          </div>   
+        </div>
+      </div>}
+    </section>
+
+@*
+      @for(int i = 0; i < Model.Rows.Count; i++)
+           {<tr>
+            <td>
+                @Model.Rows[i]["BookName"] 
+            </td>
+            <td>                
+                @Model.Rows[i]["Author"] 
+            </td>
+            <td>               
+                @Model.Rows[i]["Price"] 
+            </td>
+            <td>                
+                @Model.Rows[i]["PrintYear"] 
+            </td>
+            <td>               
+                @Model.Rows[i]["Amount"] 
+            </td>
+            <td>              
+                @Model.Rows[i]["ImagePath"] 
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id=" @Model.Rows[i]["BookID"] ">Edit</a>              
+                <a asp-action="Delete" asp-route-id="@Model.Rows[i]["BookID"]">Delete</a>
+            </td>
+        </tr>}
+
+    </tbody>
+</table>
+*@
