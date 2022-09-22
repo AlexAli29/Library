@@ -73,7 +73,7 @@ namespace Library.Controllers
                 {
                     if (obj.Image != null)
                     {
-                        var currentDirectory = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images");
+                        var currentDirectory = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images\thumbnails");
                         var fileName = Guid.NewGuid().ToString() + ".jpg";
                         var destinationPath = Path.Combine(currentDirectory, fileName);
                         using (var stream = System.IO.File.Create(destinationPath))
@@ -81,7 +81,7 @@ namespace Library.Controllers
                             obj.Image.CopyTo(stream);
                         }
 
-                        obj.ImagePath = @"/images/thumbnails" + fileName;
+                        obj.ImagePath = @"/images/thumbnails/" + fileName;
 
                        
                     }
