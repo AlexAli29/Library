@@ -37,26 +37,18 @@ namespace Library.Controllers
 
      
 
-        // GET: Books/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+   
 
-        // POST: Books/Create       
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,BookName,Author,Price,PrintYear,Amount,ImagePath,Rating")] Book book)
-        {
-           
-            return View();
-        }
 
         // GET: Books/AddOrEdit/
         public IActionResult AddOrEdit(int? id)
         {
 
             BookViewModel model = new BookViewModel();
+            if(id >0)
+            {
+                model = FetchBookByID(id);
+            }
 
             
             return View(model);
@@ -114,9 +106,8 @@ namespace Library.Controllers
         // GET: Books/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-          
-
-            return View();
+           BookViewModel bookViewModel = FetchBookByID(id);
+           return View(bookViewModel);
         }
 
         // POST: Books/Delete/5
@@ -124,7 +115,46 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            return View();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                DataTable dtbl = new DataTable();
+                sqlConnection.Open();
+                SqlCommand sqlCmd = new SqlCommand("BookDelteByID", sqlConnection);                
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+                sqlCmd.Parameters.AddWithValue("BookID", id);
+                sqlCmd.ExecuteNonQuery();
+            }
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        [NonAction]
+        public BookViewModel FetchBookByID(int? id)
+        {
+            BookViewModel book = new BookViewModel();
+           
+            using (SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                DataTable dtbl = new DataTable();
+                sqlConnection.Open();
+                SqlDataAdapter sqlData = new SqlDataAdapter("BookViewByID", sqlConnection);
+                sqlData.SelectCommand.CommandType = CommandType.StoredProcedure;
+                sqlData.SelectCommand.Parameters.AddWithValue("BookID", id);               
+                sqlData.Fill(dtbl);
+                if(dtbl.Rows.Count == 1)
+                {
+                    book.BookID = Convert.ToInt32(dtbl.Rows[0]["BookID"].ToString());
+                    book.BookName = dtbl.Rows[0]["BookName"].ToString();
+                    book.Author = dtbl.Rows[0]["Author"].ToString();
+                    book.Price = Convert.ToInt32(dtbl.Rows[0]["Price"].ToString());
+                    book.PrintYear = Convert.ToInt32(dtbl.Rows[0]["PrintYear"].ToString());
+                    book.Amount = Convert.ToInt32(dtbl.Rows[0]["Amount"].ToString());
+                    book.ImagePath = dtbl.Rows[0]["ImagePath"].ToString();                
+                    book.Rating = Convert.ToInt32(dtbl.Rows[0]["Rating"].ToString());                  
+                }
+                  return book;
+            }        
 
         }
 
