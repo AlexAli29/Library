@@ -1,12 +1,16 @@
-﻿@model System.Data.DataTable
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+@model System.Data.DataTable
 
 @{
     ViewData["Title"] = "Catalog";
 }
 
 <h1>@ViewData["Title"]</h1>
-  <a asp-action="AddOrEdit">Create New</a>
-
+  @if( @Accessor.HttpContext.Session.GetString("RoleId") =="1")
+   {
+      <a class="btn btn-secondary" style="margin-bottom:10px" asp-action="AddOrEdit">Create New</a>             
+   }
     <section class="book-grid"> 
     @for(int i = 0; i < Model.Rows.Count; i++){
       <div class="book-preview"> 
@@ -35,12 +39,28 @@
               <p class="book-price">
                 @Model.Rows[i]["Price"]  BYN
                 </p>
-                <a asp-action="AddOrEdit" asp-route-id=" @Model.Rows[i]["BookID"] ">Edit</a>              
-                <a asp-action="Delete" asp-route-id="@Model.Rows[i]["BookID"]">Delete</a>
+                @if( @Accessor.HttpContext.Session.GetString("RoleId") =="2")
+                {                   
+                     <form asp-controller="Orders" asp-action="CreateOrder" method="post" asp-route-IdBook=" @Model.Rows[i]["BookID"]">
+                        <input type="hidden" asp-for=" @Model.Rows[i]["BookID"]" />
+                        <input type="submit" value="Order" class="btn btn-primary" />        
+                     </form>
+                }
+                else if(@Accessor.HttpContext.Session.GetString("RoleId") =="1")
+                {
+                    <a class="btn btn-outline-primary" asp-action="AddOrEdit" asp-route-id=" @Model.Rows[i]["BookID"] ">Edit</a>              
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Rows[i]["BookID"]">Delete</a>
+                }
+                else{
+                     <a class="btn btn-primary" asp-controller="Accounts" asp-action="Login" asp-route-id=" @Model.Rows[i]["BookID"] ">Order</a>
+                }
+                
           </div>   
         </div>
       </div>}
     </section>
+
+    
 
 @*
       @for(int i = 0; i < Model.Rows.Count; i++)

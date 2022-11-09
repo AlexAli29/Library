@@ -1,0 +1,60 @@
+﻿@model List<OrderViewModelAdmin>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+@{
+    ViewData["Title"] = "Account";
+}
+
+<h1>Account</h1>
+
+<div>
+        <h4>Admin</h4>
+    
+   
+
+    <hr />
+      <P>Name: @Accessor.HttpContext.Session.GetString("UserName") </P>     
+      <P>Email:  @Accessor.HttpContext.Session.GetString("Email")</P>
+      <P>Contact Number:  @Accessor.HttpContext.Session.GetString("ContactNumber") </P>  
+      <P>Address: @Accessor.HttpContext.Session.GetString("Address") </P> 
+   
+</div>
+<div>
+    <P>Orders:</P>
+    @foreach (var m in Model)
+    {        
+        <p> <img src="@m.ImagePath" style="width:2.2vw; height:3.6vh"/> @m.BookName  @m.Author @m.PrintYear @m.UserName
+            @if(@m.IdStatus == 1)
+            {
+                <span>Waiting</span>
+            }
+            else if(@m.IdStatus == 2)
+            {
+                 <span>Order Confirmed</span>               
+            }
+            else{
+                <span>Denied</span>                  
+            }
+             
+               <form asp-controller="Orders" asp-action="ConfirmOrder" method="post" asp-route-IdOrder="@m.IdOrder">
+                        <input type="hidden" asp-for="@m.IdOrder" />
+                        <input type="submit" value="Confirm" class="btn btn-success" />        
+                     </form>
+               <form asp-controller="Orders" asp-action="DenyOrder" method="post" asp-route-IdOrder="@m.IdOrder">
+                        <input type="hidden" asp-for="@m.IdOrder" />
+                        <input type="submit" value="Deny" class="btn btn-danger" /> 
+               </form>
+               
+
+        
+        </p><br />
+    }
+</div>
+
+<div>   
+    <a class="btn btn-outline-danger" asp-controller="Accounts" asp-action="LogOut">Log Out</a>
+</div>
+<div>   
+    <a asp-controller="Books" asp-action="Index">Back to List</a>
+</div>

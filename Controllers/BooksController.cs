@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Library.Data;
 using Library.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -80,6 +79,9 @@ namespace Library.Controllers
 
                     var book = obj.CreateBook();
 
+                    book.BookName = stripXSS(book.BookName);
+                    book.Author = stripXSS(book.Author);
+
                     sqlConnection.Open();
                     SqlCommand sqlCmd = new SqlCommand("BookAddOrEdit", sqlConnection);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
@@ -100,8 +102,16 @@ namespace Library.Controllers
                 return RedirectToAction(nameof(Index));
         }
 
-            
-    
+
+        private string stripXSS(string value)
+        {
+            value = value.Replace("<", "");
+            value = value.Replace(">", "");
+            value = value.Replace("/", "");
+            return value;
+        }
+
+
 
         // GET: Books/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -151,7 +161,7 @@ namespace Library.Controllers
                     book.PrintYear = Convert.ToInt32(dtbl.Rows[0]["PrintYear"].ToString());
                     book.Amount = Convert.ToInt32(dtbl.Rows[0]["Amount"].ToString());
                     book.ImagePath = dtbl.Rows[0]["ImagePath"].ToString();                
-                    book.Rating = Convert.ToInt32(dtbl.Rows[0]["Rating"].ToString());                  
+                    book.Rating = Convert.ToDouble(dtbl.Rows[0]["Rating"].ToString());                  
                 }
                   return book;
             }        

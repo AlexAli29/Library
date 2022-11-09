@@ -5,10 +5,12 @@ namespace Library.Models
     public class User
     {
         [Key]
-        public int IdUser { get; set; }
+        public int Id { get; set; }
         public string UserName { get; set; }
-        public string UserPassword {get; set; }
-
-        public int IdRole { get; set; }
+        public string? Email { get; set; }
+        public string Password {get; set; }
+        public string? ContactNumber { get; set; }
+        public string? Address { get; set; }
+        public int? RoleId { get; set; }
     }
 }
