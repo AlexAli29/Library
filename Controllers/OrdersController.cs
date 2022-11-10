@@ -45,6 +45,13 @@ namespace Library.Controllers
             return RedirectToAction("AccountAdmin", "Accounts");
         }
 
+        [HttpPost]
+        public IActionResult CancelOrder(int? IdOrder)
+        {
+            string Query = $"Delete FROM [Order] WHERE IdOrder='{IdOrder}'";
+            int result = _accRepository.ExecuteDML(Query);
+            return RedirectToAction("Account", "Accounts");
+        }
 
     }
 }

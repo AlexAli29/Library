@@ -37,7 +37,10 @@
             else{
                 <span>Denied</span>                  
             }
-        
+        <form asp-controller="Orders" asp-action="CancelOrder" method="post" asp-route-IdOrder="@m.IdOrder">
+                        <input type="hidden" asp-for="@m.IdOrder" />
+                        <input type="submit" value="Cancel" class="btn btn-outline-danger" />        
+                     </form>
         </p><br />
     }
 </div>

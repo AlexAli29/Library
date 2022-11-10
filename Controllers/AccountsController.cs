@@ -10,11 +10,12 @@ namespace Library.Controllers
     {
         private IConfiguration _config;
         AccountsRepository _accRepository;
-
+        OrdersRepository _ordersRepository;
         public AccountsController(IConfiguration config)
         {
             _config = config;
             _accRepository = new AccountsRepository(_config);
+            _ordersRepository = new OrdersRepository(_config);
         }
 
 
@@ -124,35 +125,10 @@ namespace Library.Controllers
         [HttpGet]
         public IActionResult Account()
         {
-            var orders = new List<Order>();
-            var ordersView = new List<OrderViewModel>();
-            string query;            
-            query = $"Select * from [Order] where IdUser ='{HttpContext.Session.GetString("IdUser")}'";           
-                   
+            var orders = _ordersRepository.GetOrdersByUserId(HttpContext.Session.GetString("IdUser"));
+            var ordersView = new List<OrderViewModel>();               
 
-            string connectionString = _config["ConnectionStrings:DefaultConnection"];
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                string sql = query;
-                SqlCommand command = new SqlCommand(sql, connection);
-                using (SqlDataReader dataReader = command.ExecuteReader())
-                {
-
-                    while (dataReader.Read())
-                    {
-                        orders.Add(new Order()
-                        {
-                            IdOrder = Convert.ToInt32(dataReader["IdOrder"]),
-                            IdUser = Convert.ToInt32(dataReader["IdUser"]),
-                            IdStatus = Convert.ToInt32(dataReader["IdStatus"]),
-                            IdBook = Convert.ToInt32(dataReader["IdBook"])
-                        });
-                    }
-                }
-                connection.Close();
-            }
+            string connectionString = _config["ConnectionStrings:DefaultConnection"];           
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -170,6 +146,8 @@ namespace Library.Controllers
                         {
                             ordersView.Add(new OrderViewModel()
                             {
+
+                                IdOrder = model.IdOrder,
                                 IdStatus = model.IdStatus,                               
                                 BookName = dataReader.GetString("BookName"),
                                 Author = dataReader.GetString("Author"),

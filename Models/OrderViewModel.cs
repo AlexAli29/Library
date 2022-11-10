@@ -1,7 +1,8 @@
 ﻿namespace Library.Models
 {
     public class OrderViewModel
-    {        
+    {
+        public int IdOrder { get; set; }
         public int IdStatus { get; set; }
         public int BookID { get; set; }
         public string BookName { get; set; }
